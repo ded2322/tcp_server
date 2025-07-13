@@ -1,5 +1,6 @@
 #include <string>
 #include <netinet/in.h>
+#include <optional>
 
 #pragma once
 
@@ -13,11 +14,11 @@ class TcpServer {
         TcpServer (int port);
         ~TcpServer();
 
-        bool startTcpServer();
+        void handlerClient();
         void closeUserConnection();
         void closeTcpServer();
+        bool startTcpServer();
         bool acceptClient();
-        std::string readMessage();
         bool sendMessage(const std::string&& message);
-        
+        std::optional<std::string> readMessage();
 };

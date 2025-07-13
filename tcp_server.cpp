@@ -4,7 +4,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
+#include <optional>
 #include <cstring>
 #include <iostream>
 
@@ -17,6 +17,7 @@ TcpServer::TcpServer (int port): port(port), server(-1), client(-1) {
 }
 
 TcpServer::~TcpServer() {
+    closeUserConnection();
     closeTcpServer();
 }
 
@@ -52,9 +53,9 @@ void TcpServer::closeUserConnection() {
 }
 
 void TcpServer::closeTcpServer() {
-    closeUserConnection();
     close(server);
     std::cout << "Server turn off\n";
+    exit(0);
 }
 
 bool TcpServer::acceptClient() {
@@ -70,30 +71,47 @@ bool TcpServer::acceptClient() {
     return true;
 }
 
-std::string TcpServer::readMessage() {
+std::optional<std::string> TcpServer::readMessage() {
     if(client < 0) return "";
     
     char buffer[1024] = {0};
     int bites_read = read(client, buffer, 1024);
 
-    if( bites_read < 0 ) {
-        std::cerr << "Failed read message\n";
-        return "";
+    if( bites_read <= 0 ) {
+        std::cerr << "Client close connection\n";
+        return std::nullopt;
     }
+    std::string message(buffer);
+    if (!message.empty() && message.back() == '\r') message.pop_back();  
+    if (!message.empty() && message.back() == '\n') message.pop_back();
 
-    return std::string(buffer, bites_read-2);
+    return message;
 }
         
 bool TcpServer::sendMessage(const std::string&& message) {
     if(client < 0) return false;
 
-    int bite_send = send(client, message.c_str(), message.length(), 0);
+    std::size_t bite_send = send(client, message.c_str(), message.length(), MSG_NOSIGNAL);
 
     if(bite_send < 0) {
         std::cerr << "Failed send message\n";
         return false;
     }
-    return true;
+
+    return bite_send == static_cast<std::size_t>(message.length());
+}
+
+void TcpServer::handlerClient() {
+    std::string message { "Hello :)\n"};
+    bool test = sendMessage(std::move(message));
+
+    while (true) {
+        sendMessage("Input: ");
+        auto user_message {readMessage()};
+        if (!user_message.has_value()) return;
+
+        sendMessage("Your input: " + user_message.value() + "\n");
+    }
 }
 
 // For test
