@@ -1,5 +1,7 @@
 /*
-* Cpp file responsible for tcp_server 
+****************************
+*** File for start tcp server and user handler
+****************************
 */
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -10,7 +12,9 @@
 
 #include "tcp_server.h"
 
-TcpServer::TcpServer (int port): port(port), server(-1), client(-1) {
+#define maxTcpConnection 5
+
+TcpServer::TcpServer (int port): port(port), listen_sock(-1), client(-1) {
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(port);
@@ -23,23 +27,23 @@ TcpServer::~TcpServer() {
 
 bool TcpServer::startTcpServer() {
     // Создание сокета
-    server = socket(AF_INET, SOCK_STREAM, 0);
-    if (server < 0) {
+    listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (listen_sock < 0) {
         std::cerr << "failed create socket\n";
         return false;
     }
 
     // Разрешение для повторного использования адреса
     int opt = 1;
-    setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    setsockopt(listen_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
     
     // Резервация порта
-    if (bind(server, (struct sockaddr *)&address, sizeof(address)) < 0) {
+    if (bind(listen_sock, (struct sockaddr *)&address, sizeof(address)) < 0) {
         std::cerr << "Failed create bind\n";
         return false;
     }
     // Начинаем слушать соединения
-    if (listen(server, 5) < 0) {
+    if (listen(listen_sock, maxTcpConnection) < 0) {
         std::cerr << ("Failed start listen\n");
         return false;
     }
@@ -53,14 +57,14 @@ void TcpServer::closeUserConnection() {
 }
 
 void TcpServer::closeTcpServer() {
-    close(server);
-    std::cout << "Server turn off\n";
+    close(listen_sock);
+    std::cout << "listen_sock turn off\n";
     exit(0);
 }
 
 bool TcpServer::acceptClient() {
     socklen_t addrlen = sizeof(address);
-    client = accept(server, (struct sockaddr *)&address, (socklen_t *)&addrlen);
+    client = accept(listen_sock, (struct sockaddr *)&address, (socklen_t *)&addrlen);
 
     if(client < 0) {
         std::cerr << "Failed accept connection\n";
@@ -72,12 +76,14 @@ bool TcpServer::acceptClient() {
 }
 
 std::optional<std::string> TcpServer::readMessage() {
+    // TODO create loop for reading long message
+    // TODO  corrent EINTR and EAGAIN error
     if(client < 0) return "";
     
     char buffer[1024] = {0};
-    int bites_read = read(client, buffer, 1024);
+    int bytes = read(client, buffer, 1024);
 
-    if( bites_read <= 0 ) {
+    if( bytes <= 0 ) {
         std::cerr << "Client close connection\n";
         return std::nullopt;
     }
