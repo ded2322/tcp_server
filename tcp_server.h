@@ -15,8 +15,8 @@ class TcpServer {
         TcpServer (int port);
         ~TcpServer();
 
-        void handlerClient(UserConnection user_connection);
+        void startTcpServer();
         void closeTcpServer();
         int acceptClient();
-        bool startTcpServer();
+        void handlerClient(UserConnection user_connection);
 };

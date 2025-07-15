@@ -16,10 +16,19 @@
 int main() {
     TcpServer server(8080);
 
-    if (!server.startTcpServer()) return -1;
+    try {
+        server.startTcpServer();
+    } catch (const char* exep) {
+        std::cerr << "startTcpServer: " << exep << "\n";
+        return -1;
+    }
      
     while (true) {
-        UserConnection user_connection {server.acceptClient()};
-        server.handlerClient(user_connection);
+        try{
+            UserConnection user_connection { server.acceptClient() };
+            server.handlerClient( user_connection );
+        } catch (const char* exep) {
+            std::cerr << "User_connection: " << exep << "\n";
+        }
     }
 }
