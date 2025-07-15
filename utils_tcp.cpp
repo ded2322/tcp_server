@@ -16,7 +16,8 @@ UserConnection::UserConnection(int client_sock): client_sock(client_sock) {}
 
 void UserConnection::closeUserConnection() {
     close(client_sock);
-    std::cout << "Connection with client close\n"; 
+    client_sock = -1;
+    std::cout << "Connection with client close\n";
 }
 
 std::optional<std::string> UserConnection::readMessage() {
@@ -28,7 +29,6 @@ std::optional<std::string> UserConnection::readMessage() {
     int bytes = read(client_sock, buffer, 1024);
 
     if( bytes <= 0 ) {
-        std::cerr << "Client close connection\n";
         return std::nullopt;
     }
 

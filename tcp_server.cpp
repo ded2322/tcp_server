@@ -46,6 +46,7 @@ void TcpServer::startTcpServer() {
 
 void TcpServer::closeTcpServer() {
     close(listen_sock);
+    listen_sock = -1;
     std::cout << "Server turn off\n";
     exit(0);
 }
@@ -68,7 +69,11 @@ void TcpServer::handlerClient(UserConnection user_connection) {
     while (true) {
         user_connection.sendMessage("Input: ");
         auto user_message {user_connection.readMessage()};
-        if (!user_message.has_value()) return;
+
+        if (!user_message.has_value()) {
+            user_connection.closeUserConnection(); 
+            return;
+        }
 
         user_connection.sendMessage("Your input: " + user_message.value() + "\n");
     }
