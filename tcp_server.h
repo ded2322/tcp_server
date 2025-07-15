@@ -1,24 +1,22 @@
+#pragma once
+
 #include <string>
 #include <netinet/in.h>
 #include <optional>
 
-#pragma once
+#include "utils_tcp.h"
 
 class TcpServer {
     private:
         int port;
         int listen_sock;
-        int client;
         struct sockaddr_in address;
     public:
         TcpServer (int port);
         ~TcpServer();
 
-        void handlerClient();
-        void closeUserConnection();
+        void handlerClient(UserConnection user_connection);
         void closeTcpServer();
+        int acceptClient();
         bool startTcpServer();
-        bool acceptClient();
-        bool sendMessage(const std::string&& message);
-        std::optional<std::string> readMessage();
 };
