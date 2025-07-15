@@ -10,7 +10,6 @@
 #include <optional>
 #include <cstring>
 #include <errno.h>
-#include <cstring>
 
 #include "tcp_server.h"
 

@@ -40,6 +40,7 @@ std::optional<std::string> UserConnection::readMessage() {
 } 
 
 bool UserConnection::sendMessage(const std::string&& message) {
+    // TODO in future do loop, which can accept long message
     if(client_sock < 0) return false;
 
     std::size_t bite_send = send(client_sock, message.c_str(), message.length(), MSG_NOSIGNAL);
