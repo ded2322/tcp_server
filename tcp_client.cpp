@@ -34,19 +34,19 @@ class TcpClient{
             if( connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) throw strerror(errno);
         }
 
-        bool sendMessage(const std::string&& message) {
+        void sendMessage(const std::string&& message) {
             // TODO in future do loop, which can accept long message
             
             int bytes = send(sock, message.c_str(), message.length(), 0);
 
             if (bytes  < 0) {
-                std::cerr << "Failed send messag\n";
-                return false;
+                throw strerror(errno);
             }
-            return true;
         }
 
         std::string readMessage() {
+            // TODO create loop for reading long message
+            // TODO  corrent EINTR and EAGAIN error
             char buffer[1024] = {0};
 
             int bites_received = recv(sock, buffer, sizeof(buffer), 0);
@@ -59,15 +59,3 @@ class TcpClient{
             return std::string(buffer, bites_received);
         }
 };
-
-// int main() {
-//     TcpClient client(8080);
-
-//     client.connectServer();
-
-//     while (true) {
-//         std::cout << client.acceptMessage();
-//         if (client.sendMessage("Test message")) std::cout << "Succeded send message\n";
-//         // sleep(60);
-//     }
-// }

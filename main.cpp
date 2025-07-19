@@ -9,9 +9,10 @@
 #include <pthread.h>
 
 #include "tcp_server.h"
-// #include "utils_tcp.h"
-// TODO write file for client
-// TODO include client for flags
+
+// TODO write to file for client
+// TODO include flags
+// TODO add therads
 
 int main() {
     TcpServer server(8080);
@@ -27,8 +28,12 @@ int main() {
         try{
             UserConnection user_connection { server.acceptClient() };
             server.handlerClient( user_connection );
+            std::cout << "Connection with client close\n";
         } catch (const char* exep) {
             std::cerr << "User_connection: " << exep << "\n";
         }
     }
+    server.~TcpServer();
+    std::cout << "Server turn off\n";
+    exit(0);
 }

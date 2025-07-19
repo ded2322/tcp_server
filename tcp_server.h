@@ -16,7 +16,6 @@ class TcpServer {
         ~TcpServer();
 
         void startTcpServer();
-        void closeTcpServer();
         int acceptClient();
         void handlerClient(UserConnection user_connection);
 };

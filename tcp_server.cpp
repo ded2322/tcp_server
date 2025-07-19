@@ -22,7 +22,8 @@ TcpServer::TcpServer (int port): port(port), listen_sock(-1) {
 }
 
 TcpServer::~TcpServer() {
-    closeTcpServer();
+        close(listen_sock);
+    listen_sock = -1;
 }
 
 void TcpServer::startTcpServer() {
@@ -43,13 +44,6 @@ void TcpServer::startTcpServer() {
     std::cout << "Server start\n";
 }
 
-void TcpServer::closeTcpServer() {
-    close(listen_sock);
-    listen_sock = -1;
-    std::cout << "Server turn off\n";
-    exit(0);
-}
-
 int TcpServer::acceptClient() {
     socklen_t addrlen = sizeof(address);
     int client = accept(listen_sock, (struct sockaddr *)&address, (socklen_t *)&addrlen);
@@ -67,13 +61,19 @@ void TcpServer::handlerClient(UserConnection user_connection) {
 
     while (true) {
         user_connection.sendMessage("Input: ");
-        auto user_message {user_connection.readMessage()};
+        try {
+            
+            auto user_message {user_connection.readMessage()};
 
-        if (!user_message.has_value()) {
-            user_connection.closeUserConnection(); 
-            return;
+            if (!user_message.has_value()) {
+                user_connection.closeUserConnection(); 
+                return;
+            }
+
+            user_connection.sendMessage("Your input: " + user_message.value() + "\n");
+
+        } catch (const char* exep) {
+            std::cerr << "handlerClient: " << exep;
         }
-
-        user_connection.sendMessage("Your input: " + user_message.value() + "\n");
     }
 }

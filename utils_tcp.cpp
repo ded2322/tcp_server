@@ -17,38 +17,27 @@ UserConnection::UserConnection(int client_sock): client_sock(client_sock) {}
 void UserConnection::closeUserConnection() {
     close(client_sock);
     client_sock = -1;
-    std::cout << "Connection with client close\n";
 }
 
 std::optional<std::string> UserConnection::readMessage() {
     // TODO create loop for reading long message
     // TODO  corrent EINTR and EAGAIN error
-    if(client_sock < 0) return "";
+    if(client_sock < 0) throw strerror(errno);
 
     char buffer[1024] = {0};
     int bytes = read(client_sock, buffer, 1024);
 
-    if( bytes <= 0 ) {
-        return std::nullopt;
-    }
+    if ( bytes <= 0 ) return std::nullopt;
 
-    std::string message(buffer);
-    if (!message.empty() && message.back() == '\r') message.pop_back();  
-    if (!message.empty() && message.back() == '\n') message.pop_back();
-
-    return message;
+    return std::string(buffer);
 } 
 
-bool UserConnection::sendMessage(const std::string&& message) {
+void UserConnection::sendMessage(const std::string&& message) {
     // TODO in future do loop, which can accept long message
-    if(client_sock < 0) return false;
+    if (client_sock < 0) throw "Failed send message: no client";
 
     std::size_t bite_send = send(client_sock, message.c_str(), message.length(), MSG_NOSIGNAL);
 
-    if(bite_send < 0) {
-        std::cerr << "Failed send message\n";
-        return false;
-    }
-    
-    return bite_send == static_cast<std::size_t>(message.length());
+    if(bite_send < 0) throw "Failed send message\n";
+   
 }

@@ -13,6 +13,6 @@ class UserConnection {
     public:
         UserConnection(int client_sock);
         void closeUserConnection();
-        bool sendMessage(const std::string&& message);
+        void sendMessage(const std::string&& message);
         std::optional<std::string> readMessage();
 };
