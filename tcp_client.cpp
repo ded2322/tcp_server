@@ -39,9 +39,7 @@ class TcpClient{
             
             int bytes = send(sock, message.c_str(), message.length(), 0);
 
-            if (bytes  < 0) {
-                throw strerror(errno);
-            }
+            if (bytes  < 0) throw strerror(errno);
         }
 
         std::string readMessage() {
@@ -51,10 +49,7 @@ class TcpClient{
 
             int bites_received = recv(sock, buffer, sizeof(buffer), 0);
             
-            if (bites_received < 0) {
-                std::cerr << "Failed read message\n";
-                return "";
-            }
+            if (bites_received < 0) throw "Failed read message\n";
 
             return std::string(buffer, bites_received);
         }
