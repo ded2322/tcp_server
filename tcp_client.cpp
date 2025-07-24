@@ -24,7 +24,7 @@ class TcpClient{
 
         ~TcpClient() {
             close(sock);
-            int sock =-1;
+            sock =-1;
         }
 
         void connectServer() {

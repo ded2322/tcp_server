@@ -36,8 +36,7 @@ void UserConnection::sendMessage(const std::string&& message) {
     // TODO in future do loop, which can accept long message
     if (client_sock < 0) throw "Failed send message: no client";
 
-    std::size_t bite_send = send(client_sock, message.c_str(), message.length(), MSG_NOSIGNAL);
+    ssize_t byte_send = send(client_sock, message.c_str(), message.length(), MSG_NOSIGNAL);
 
-    if(bite_send < 0) throw "Failed send message\n";
-   
+    if (byte_send < 0) throw "Failed send message\n";
 }
