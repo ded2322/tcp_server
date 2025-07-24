@@ -29,8 +29,7 @@ class TcpClient{
 
         void connectServer() {
             sock = socket(AF_INET, SOCK_STREAM, 0);
-            if (sock < 0) 
-                throw sprintf((char*)"socket: %s (%d)", strerror(errno), errno); 
+            if (sock < 0) strerror(errno); 
 
             if( connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) 
                 throw sprintf((char*)"connect: %s (%d)", strerror(errno), errno); 
@@ -41,8 +40,7 @@ class TcpClient{
             
             int bytes = send(sock, message.c_str(), message.length(), 0);
 
-            if (bytes  < 0) 
-                throw sprintf((char*)"send: %s (%d)", strerror(errno), errno); 
+            if (bytes  < 0) strerror(errno); 
         }
 
         std::string readMessage() {
@@ -52,8 +50,7 @@ class TcpClient{
 
             int bites_received = read(sock, buffer, sizeof(buffer));
             
-            if (bites_received < 0)
-                throw sprintf((char*)"read: %s (%d)", strerror(errno), errno);  
+            if (bites_received < 0) strerror(errno);  
 
             return std::string(buffer, bites_received);
         }

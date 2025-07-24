@@ -10,6 +10,7 @@
 #include <optional>
 #include <cstring>
 #include <errno.h>
+#include <format>
 
 #include "tcp_server.h"
 
@@ -29,20 +30,17 @@ TcpServer::~TcpServer() {
 void TcpServer::startTcpServer() {
     // Создание сокета
     listen_sock = socket(AF_INET, SOCK_STREAM, 0);
-    if ( listen_sock < 0 ) throw sprintf((char*)"socket: %s (%d)", strerror(errno), errno); 
+    if ( listen_sock < 0 ) strerror(errno); 
 
     // Разрешение для повторного использования адреса
     int opt = 1;
-    if (setsockopt(listen_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) 
-        throw sprintf((char*)"setsockopt: %s (%d)", strerror(errno), errno); 
+    if (setsockopt(listen_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) strerror(errno); 
 
     // Резервация порта
-    if (bind(listen_sock, (struct sockaddr *)&address, sizeof(address)) < 0) 
-        throw sprintf((char*)"bind: %s (%d)", strerror(errno), errno); 
+    if (bind(listen_sock, (struct sockaddr *)&address, sizeof(address)) < 0) strerror(errno); 
 
     // Начинаем слушать соединения
-    if (listen(listen_sock, maxTcpConnection) < 0) 
-        throw sprintf((char*)"listen: %s (%d)", strerror(errno), errno); 
+    if (listen(listen_sock, maxTcpConnection) < 0) strerror(errno);
 
     std::cout << "Server start\n";
 }
@@ -51,9 +49,8 @@ int TcpServer::acceptClient() {
     socklen_t addrlen = sizeof(address);
     int client = accept(listen_sock, (struct sockaddr *)&address, (socklen_t *)&addrlen);
 
-    if ( client <= 0 ) throw sprintf((char*)"accept: %s (%d)", strerror(errno), errno); 
+    if ( client <= 0 ) throw strerror(errno); 
     
-
     std::cout << "Accept user connection\n";
     return client;
 }

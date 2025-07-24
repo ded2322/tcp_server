@@ -28,7 +28,7 @@ std::optional<std::string> UserConnection::readMessage() {
     ssize_t bytes = read(client_sock, buffer, 1024);
 
     if ( bytes == 0 ) return std::nullopt;
-    if ( bytes < 0 ) throw sprintf((char*)"read: %s (%d)", strerror(errno), errno);
+    if ( bytes < 0 ) strerror(errno);
 
     return std::string(buffer);
 } 
@@ -39,5 +39,5 @@ void UserConnection::sendMessage(const std::string&& message) {
 
     ssize_t byte_send = send(client_sock, message.c_str(), message.length(), MSG_NOSIGNAL);
 
-    if (byte_send < 0) throw sprintf((char*)"send: %s (%d)", strerror(errno), errno);
+    if (byte_send < 0) strerror(errno);
 }
