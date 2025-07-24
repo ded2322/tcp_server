@@ -29,9 +29,11 @@ class TcpClient{
 
         void connectServer() {
             sock = socket(AF_INET, SOCK_STREAM, 0);
-            if (sock < 0) throw strerror(errno);
+            if (sock < 0) 
+                throw sprintf((char*)"socket: %s (%d)", strerror(errno), errno); 
 
-            if( connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) throw strerror(errno);
+            if( connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) 
+                throw sprintf((char*)"connect: %s (%d)", strerror(errno), errno); 
         }
 
         void sendMessage(const std::string&& message) {
@@ -39,7 +41,8 @@ class TcpClient{
             
             int bytes = send(sock, message.c_str(), message.length(), 0);
 
-            if (bytes  < 0) throw strerror(errno);
+            if (bytes  < 0) 
+                throw sprintf((char*)"send: %s (%d)", strerror(errno), errno); 
         }
 
         std::string readMessage() {
@@ -47,9 +50,10 @@ class TcpClient{
             // TODO  corrent EINTR and EAGAIN error
             char buffer[1024] = {0};
 
-            int bites_received = recv(sock, buffer, sizeof(buffer), 0);
+            int bites_received = read(sock, buffer, sizeof(buffer));
             
-            if (bites_received < 0) throw "Failed read message\n";
+            if (bites_received < 0)
+                throw sprintf((char*)"read: %s (%d)", strerror(errno), errno);  
 
             return std::string(buffer, bites_received);
         }
