@@ -12,7 +12,3 @@ add_executable(
     ${CMAKE_CURRENT_SOURCE_DIR}/tcp_client.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils_tcp.cpp
 )
-
-# set(HEADERS
-#     tcp_server.h`
-# )

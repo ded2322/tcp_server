@@ -13,7 +13,7 @@
 class TcpClient{
     private:
         int port;
-        int sock;
+        int sock = -1;
         struct sockaddr_in server_addr;
     public:
         TcpClient (int port): port(port), sock(-1) {

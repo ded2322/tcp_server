@@ -22,7 +22,7 @@ TcpServer::TcpServer (int port): port(port), listen_sock(-1) {
 }
 
 TcpServer::~TcpServer() {
-        close(listen_sock);
+    close(listen_sock);
     listen_sock = -1;
 }
 

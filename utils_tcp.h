@@ -7,7 +7,7 @@
 
 class UserConnection {
     private:
-        int client_sock;
+        int client_sock = -1;
         struct sockaddr_in client_addr;
 
     public:

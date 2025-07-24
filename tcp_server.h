@@ -9,7 +9,7 @@
 class TcpServer {
     private:
         int port;
-        int listen_sock;
+        int listen_sock = -1;
         struct sockaddr_in address;
     public:
         TcpServer (int port);
