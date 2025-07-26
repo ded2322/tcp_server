@@ -17,5 +17,5 @@ class TcpServer {
 
         void startTcpServer();
         int acceptClient();
-        void handlerClient(Connection user_connection);
+        void handlerClient(Connection& user_connection);
 };
