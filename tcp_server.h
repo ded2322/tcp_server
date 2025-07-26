@@ -4,7 +4,7 @@
 #include <netinet/in.h>
 #include <optional>
 
-#include "utils_tcp.h"
+#include "tcp_conn.h"
 
 class TcpServer {
     private:
@@ -17,5 +17,5 @@ class TcpServer {
 
         void startTcpServer();
         int acceptClient();
-        void handlerClient(UserConnection user_connection);
+        void handlerClient(Connection user_connection);
 };

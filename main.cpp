@@ -10,10 +10,10 @@
 #include <string>
 #include <pthread.h>
 #include <atomic>
-#include "tcp_server.h"
 #include <csignal>
 #include <cstring>
 
+#include "tcp_server.h"
 // TODO write to file for client
 // TODO include flags
 // TODO add therads
@@ -43,7 +43,7 @@ int main() {
     
     while (server_is_running) {
         try{
-            UserConnection user_connection { server.acceptClient() };
+            Connection user_connection { server.acceptClient() };
             server.handlerClient( user_connection );
             std::cout << "Connection with client close\n";
         } catch (const char* exep) {
