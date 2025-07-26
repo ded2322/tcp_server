@@ -11,6 +11,7 @@
 #include <cstring>
 #include <errno.h>
 #include <format>
+#include <system_error>
 
 #include "tcp_server.h"
 
@@ -55,7 +56,7 @@ int TcpServer::acceptClient() {
     return client;
 }
 
-void TcpServer::handlerClient(UserConnection user_connection) {
+void TcpServer::handlerClient(Connection& user_connection) {
     user_connection.sendMessage( std::move("Hello :)\n") );
 
     while (true) {
@@ -65,7 +66,7 @@ void TcpServer::handlerClient(UserConnection user_connection) {
             auto user_message {user_connection.readMessage()};
 
             if (!user_message.has_value()) {
-                user_connection.closeUserConnection(); 
+                user_connection.closeConnection(); 
                 return;
             }
 
