@@ -45,7 +45,7 @@ int main() {
     while (server_is_running) {
         try{
             
-            std::unique_ptr<Connection> user_connection = std::make_unique<Connection>(server.acceptClient());
+            std::unique_ptr<Connection> user_connection = server.acceptClient();
 
             server.handlerClient( user_connection );
             std::cout << "Connection with client close\n";

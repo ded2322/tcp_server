@@ -46,14 +46,14 @@ void TcpServer::startTcpServer() {
     std::cout << "Server start\n";
 }
 
-int TcpServer::acceptClient() {
+std::unique_ptr<Connection> TcpServer::acceptClient() {
     socklen_t addrlen = sizeof(address);
     int client = accept(listen_sock, (struct sockaddr *)&address, (socklen_t *)&addrlen);
 
     if ( client <= 0 ) throw strerror(errno); 
     
     std::cout << "Accept user connection\n";
-    return client;
+    return std::make_unique<Connection>(client);
 }
 
 void TcpServer::handlerClient(std::unique_ptr<Connection>& user_connection) {

@@ -8,6 +8,9 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <memory>
+
+#include "tcp_conn.h"
 
 class TcpClient{
     private:
@@ -25,12 +28,12 @@ class TcpClient{
             client_sock = -1;
         }
 
-        int connectServer() {
+        std::unique_ptr<Connection> connectServer() {
             int client_sock = socket(AF_INET, SOCK_STREAM, 0);
             if (client_sock < 0) throw strerror(errno); 
 
             if( connect(client_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) 
                 throw strerror(errno);
-            return client_sock;
+            return std::make_unique<Connection>(client_sock);
         }
 };

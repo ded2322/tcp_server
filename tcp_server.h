@@ -3,6 +3,7 @@
 #include <string>
 #include <netinet/in.h>
 #include <optional>
+#include <memory>
 
 #include "tcp_conn.h"
 
@@ -16,6 +17,6 @@ class TcpServer {
         ~TcpServer();
 
         void startTcpServer();
-        int acceptClient();
+        std::unique_ptr<Connection> acceptClient();
         void handlerClient(std::unique_ptr<Connection>& user_connection);
 };
