@@ -3,6 +3,7 @@
 *** File for user process
 ****************************
 */
+
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -28,7 +29,7 @@ std::optional<std::string> Connection::readMessage() {
     ssize_t bytes = read(sock, buffer, 1024);
 
     if ( bytes == 0 ) return std::nullopt;
-    if ( bytes < 0 ) strerror(errno);
+    if ( bytes < 0 ) throw strerror(errno);
 
     return std::string(buffer);
 } 
@@ -39,5 +40,5 @@ void Connection::sendMessage(const std::string&& message) {
 
     ssize_t byte_send = send(sock, message.c_str(), message.length(), MSG_NOSIGNAL);
 
-    if (byte_send < 0) strerror(errno);
+    if (byte_send < 0) throw strerror(errno);
 }

@@ -12,10 +12,10 @@ class TcpServer {
         int listen_sock = -1;
         struct sockaddr_in address;
     public:
-        TcpServer (int port);
+        TcpServer (int usr_port);
         ~TcpServer();
 
         void startTcpServer();
         int acceptClient();
-        void handlerClient(Connection user_connection);
+        void handlerClient(std::unique_ptr<Connection>& user_connection);
 };

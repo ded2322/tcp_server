@@ -12,6 +12,7 @@
 #include <atomic>
 #include <csignal>
 #include <cstring>
+#include <memory>
 
 #include "tcp_server.h"
 // TODO write to file for client
@@ -43,9 +44,12 @@ int main() {
     
     while (server_is_running) {
         try{
-            Connection user_connection { server.acceptClient() };
+            
+            std::unique_ptr<Connection> user_connection = std::make_unique<Connection>(server.acceptClient());
+
             server.handlerClient( user_connection );
             std::cout << "Connection with client close\n";
+
         } catch (const char* exep) {
             std::cerr << "User_connection: " << exep << "\n";
         }
