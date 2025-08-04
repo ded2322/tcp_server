@@ -15,6 +15,10 @@
 
 Connection::Connection(int client_sock): sock(client_sock) {}
 
+Connection::~Connection() {
+    closeConnection();
+}
+
 void Connection::closeConnection() {
     close(sock);
     sock = -1;

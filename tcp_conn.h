@@ -12,6 +12,7 @@ class Connection {
 
     public:
         Connection(int client_sock);
+        ~Connection();
         void closeConnection();
         void sendMessage(const std::string&& message);
         std::optional<std::string> readMessage();

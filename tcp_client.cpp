@@ -23,11 +23,6 @@ class TcpClient{
             inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
         }
 
-        void closeConnection(int client_sock) {
-            close(client_sock);
-            client_sock = -1;
-        }
-
         std::unique_ptr<Connection> connectServer() {
             int client_sock = socket(AF_INET, SOCK_STREAM, 0);
             if (client_sock < 0) throw strerror(errno); 
