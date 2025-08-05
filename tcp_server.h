@@ -3,8 +3,9 @@
 #include <string>
 #include <netinet/in.h>
 #include <optional>
+#include <memory>
 
-#include "utils_tcp.h"
+#include "tcp_conn.h"
 
 class TcpServer {
     private:
@@ -12,10 +13,10 @@ class TcpServer {
         int listen_sock = -1;
         struct sockaddr_in address;
     public:
-        TcpServer (int port);
+        TcpServer (int usr_port);
         ~TcpServer();
 
         void startTcpServer();
-        int acceptClient();
-        void handlerClient(UserConnection user_connection);
+        std::unique_ptr<Connection> acceptClient();
+        void handlerClient(std::unique_ptr<Connection>& user_connection);
 };

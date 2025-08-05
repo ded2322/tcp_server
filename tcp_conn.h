@@ -5,14 +5,15 @@
 #include <string>
 #include <optional>
 
-class UserConnection {
+class Connection {
     private:
-        int client_sock = -1;
+        int sock = -1;
         struct sockaddr_in client_addr;
 
     public:
-        UserConnection(int client_sock);
-        void closeUserConnection();
+        Connection(int client_sock);
+        ~Connection();
+        void closeConnection();
         void sendMessage(const std::string&& message);
         std::optional<std::string> readMessage();
 };
