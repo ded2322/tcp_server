@@ -4,18 +4,15 @@
 ****************************
 */
 #include <iostream>
-#include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <optional>
 #include <cstring>
 #include <errno.h>
-#include <format>
 #include <memory>
 
 #include "tcp_server.h"
-
-#define maxTcpConnection 5
+#include "global_values.h"
 
 TcpServer::TcpServer (int usr_port): port(usr_port), listen_sock(-1) {
     address.sin_family = AF_INET;

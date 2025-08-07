@@ -2,7 +2,6 @@
 
 #include <string>
 #include <netinet/in.h>
-#include <optional>
 #include <memory>
 
 #include "tcp_conn.h"
