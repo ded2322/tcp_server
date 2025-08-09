@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "tcp_conn.h"
+#include "global_values.h"
 
 class TcpServer {
     private:

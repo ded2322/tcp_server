@@ -39,32 +39,6 @@ int main() {
         thread_pool.stop_worker();
         return -1;
     }
-    // std::vector<std::thread> threads(COUNT_THREADS);
-    // std::vector<int> sock_client(COUNT_THREADS);
-
-
-    // for (std::size_t thread {0}; thread < COUNT_THREADS; ++thread) {
-    //     while (server_is_running) {
-    //         try{
-
-    //            std::unique_ptr<Connection> user_connection = server.acceptClient();
-               
-    //             threads.emplace_back( [&server] (std::unique_ptr<Connection> connection) mutable {
-    //                 server.handlerClient(connection);
-    //                 std::cout << "Connection with client close\n";
-    //             }, std::move(user_connection));
-                
-    //         } catch (const char* exep) {
-    //             std::cerr << "User_connection: " << exep << "\n";
-    //         }
-    //     }
-    // }
-    
-    // for (auto& thread: threads) {
-    //     if (thread.joinable()) {
-    //         thread.join();
-    //     }
-    // }
 
     server.~TcpServer();
     std::cout << "Server turn off\n";

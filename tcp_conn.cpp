@@ -19,9 +19,8 @@ Connection::~Connection() {
     closeConnection();
 }
 
-void Connection::closeConnection() {
-    close(sock);
-    sock = -1;
+bool Connection::isConnection() {
+    return sock != -1 ? true : false;
 }
 
 std::optional<std::string> Connection::readMessage() {
@@ -45,4 +44,9 @@ void Connection::sendMessage(const std::string&& message) {
     ssize_t byte_send = send(sock, message.c_str(), message.length(), MSG_NOSIGNAL);
 
     if (byte_send < 0) throw strerror(errno);
+}
+
+void Connection::closeConnection() {
+    close(sock);
+    sock = -1;
 }

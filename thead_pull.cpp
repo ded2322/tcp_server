@@ -16,9 +16,12 @@ void ThreadPool::create_worker() {
 
         queue_mutex.unlock();
         
-        if (connection_user){
+        if (connection_user && connection_user->isConnection()){
             server.handlerClient(connection_user);
+            connection_user->closeConnection();
+            std::cout << "Connection with client close\n";
         } else {
+            // Сделано как некая оптимизация чтобы не додосить мой одноядерный сервер
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 

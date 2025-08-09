@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <string>
@@ -16,4 +17,5 @@ class Connection {
         void closeConnection();
         void sendMessage(const std::string&& message);
         std::optional<std::string> readMessage();
+        bool isConnection();
 };
