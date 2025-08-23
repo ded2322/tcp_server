@@ -4,18 +4,14 @@
 ****************************
 */
 #include <iostream>
-#include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <optional>
 #include <cstring>
 #include <errno.h>
-#include <format>
 #include <memory>
 
 #include "tcp_server.h"
-
-#define maxTcpConnection 5
 
 TcpServer::TcpServer (int usr_port): port(usr_port), listen_sock(-1) {
     address.sin_family = AF_INET;
@@ -56,21 +52,21 @@ std::unique_ptr<Connection> TcpServer::acceptClient() {
     return std::make_unique<Connection>(client);
 }
 
-void TcpServer::handlerClient(std::unique_ptr<Connection>& user_connection) {
-    user_connection->sendMessage(std::move("Hello :)\n") );
+void TcpServer::handleClient(std::unique_ptr<Connection>& connection_user) {
+    connection_user->sendMessage(std::move("Hello :)\n") );
 
     while (true) {
-        user_connection->sendMessage("Input: ");
+        connection_user->sendMessage("Input: ");
         try {
             
-            auto user_message { user_connection->readMessage() };
+            auto user_message { connection_user->readMessage() };
 
-            if (!user_message.has_value()) { user_connection->closeConnection(); return; }
+            if (!user_message.has_value()) { return; }
 
-            user_connection->sendMessage("Your input: " + user_message.value() + "\n");
+            connection_user->sendMessage("Your input: " + user_message.value() + "\n");
 
         } catch (const char* exep) {
-            std::cerr << "handlerClient: " << exep;
+            std::cerr << "handleClient: " << exep;
         }
     }
 }

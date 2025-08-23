@@ -2,10 +2,10 @@
 
 #include <string>
 #include <netinet/in.h>
-#include <optional>
 #include <memory>
 
 #include "tcp_conn.h"
+#include "global_values.h"
 
 class TcpServer {
     private:
@@ -18,5 +18,5 @@ class TcpServer {
 
         void startTcpServer();
         std::unique_ptr<Connection> acceptClient();
-        void handlerClient(std::unique_ptr<Connection>& user_connection);
+        void handleClient(std::unique_ptr<Connection>& user_connection);
 };
