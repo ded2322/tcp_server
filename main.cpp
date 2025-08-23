@@ -33,7 +33,7 @@ int main() {
 
     ThreadPool thread_pool {server};
     try {
-        thread_pool.start_worker(COUNT_THREADS);
+        thread_pool.start_workers(COUNT_THREADS);
     } catch (const char* exep) {
         std::cerr << "thread_pool: " << exep << "\n";
         thread_pool.stop_worker();

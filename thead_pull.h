@@ -14,13 +14,13 @@ class ThreadPool {
     private:
         TcpServer server;
 
-        std::queue<std::unique_ptr<Connection>> queue_connection;
+        std::queue<std::unique_ptr<Connection>> connection_queue;
         std::mutex queue_mutex;
         std::vector<std::thread> threads;
 
-        void create_worker();
+        void worker_loop();
     public:
         ThreadPool (TcpServer& data_server);
-        void start_worker(int worker_count);
+        void start_workers(int worker_count);
         void stop_worker();
 };

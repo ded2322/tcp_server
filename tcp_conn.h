@@ -17,5 +17,5 @@ class Connection {
         void closeConnection();
         void sendMessage(const std::string&& message);
         std::optional<std::string> readMessage();
-        bool isConnection();
+        bool isConnected();
 };

@@ -18,5 +18,5 @@ class TcpServer {
 
         void startTcpServer();
         std::unique_ptr<Connection> acceptClient();
-        void handlerClient(std::unique_ptr<Connection>& user_connection);
+        void handleClient(std::unique_ptr<Connection>& user_connection);
 };

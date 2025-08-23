@@ -3,21 +3,21 @@
 
 ThreadPool::ThreadPool (TcpServer& data_server) : server(data_server) {}
 
-void ThreadPool::create_worker() {
+void ThreadPool::worker_loop() {
     std::unique_ptr<Connection> connection_user = nullptr;
     
     while (server_is_running) {
         
         queue_mutex.lock();
-        if (!queue_connection.empty()) {
-            connection_user = std::move(queue_connection.front());
-            queue_connection.pop();
+        if (!connection_queue.empty()) {
+            connection_user = std::move(connection_queue.front());
+            connection_queue.pop();
         }
 
         queue_mutex.unlock();
         
-        if (connection_user && connection_user->isConnection()){
-            server.handlerClient(connection_user);
+        if (connection_user && connection_user->isConnected()){
+            server.handleClient(connection_user);
             connection_user->closeConnection();
             std::cout << "Connection with client close\n";
         } else {
@@ -29,14 +29,14 @@ void ThreadPool::create_worker() {
 }
 
 
-void ThreadPool::start_worker(int worker_count) {
+void ThreadPool::start_workers(int worker_count) {
     for (int count_thread {0}; count_thread < worker_count; ++count_thread) {
-        threads.emplace_back(&ThreadPool::create_worker, this);
+        threads.emplace_back(&ThreadPool::worker_loop, this);
     }
     while (server_is_running) {
         std::unique_ptr<Connection> connection_user = server.acceptClient();
         queue_mutex.lock();
-        queue_connection.push(std::move(connection_user));
+        connection_queue.push(std::move(connection_user));
         queue_mutex.unlock();
         
     }

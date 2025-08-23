@@ -52,7 +52,7 @@ std::unique_ptr<Connection> TcpServer::acceptClient() {
     return std::make_unique<Connection>(client);
 }
 
-void TcpServer::handlerClient(std::unique_ptr<Connection>& connection_user) {
+void TcpServer::handleClient(std::unique_ptr<Connection>& connection_user) {
     connection_user->sendMessage(std::move("Hello :)\n") );
 
     while (true) {
@@ -66,7 +66,7 @@ void TcpServer::handlerClient(std::unique_ptr<Connection>& connection_user) {
             connection_user->sendMessage("Your input: " + user_message.value() + "\n");
 
         } catch (const char* exep) {
-            std::cerr << "handlerClient: " << exep;
+            std::cerr << "handleClient: " << exep;
         }
     }
 }

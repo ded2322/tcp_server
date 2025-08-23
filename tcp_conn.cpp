@@ -19,8 +19,8 @@ Connection::~Connection() {
     closeConnection();
 }
 
-bool Connection::isConnection() {
-    return sock != -1 ? true : false;
+bool Connection::isConnected() {
+    return sock != -1;
 }
 
 std::optional<std::string> Connection::readMessage() {
